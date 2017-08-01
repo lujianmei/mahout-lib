@@ -26,16 +26,9 @@ RUN echo "JAVA_HOME=/usr/bin" >> /etc/environment
 #RUN apt-get install -y git
 RUN apt-get install -y curl wget openssh-server openssh-client
 
-RUN echo 'PATH=$PATH:HOME/bin:$JAVA_HOME/bin' >> /etc/profile &&\
-echo 'export JAVA_HOME' >> /etc/profile &&\
+RUN echo 'PATH=$PATH:HOME/bin:$JAVA_HOME/bin' >> /etc/profile && \
+echo 'export JAVA_HOME' >> /etc/profile && \
 echo 'export PATH' >> /etc/profile
-
-
-# install sbt
-echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
-apt-get update
-apt-get install sbt
 
 
 RUN addgroup hadoop
@@ -54,6 +47,13 @@ RUN ssh-keyscan -H localhost >> ~/.ssh/known_hosts
 
 USER root
 
+# install sbt
+RUN echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+RUN apt-get update
+RUN apt-get install sbt -yq
+
+
 #WORKDIR /src/mahout
 #RUN git clone https://github.com/apache/mahout.git /src/mahout
 
@@ -70,8 +70,8 @@ mv hadoop-2.8.1 /usr/local/hadoop
 # add hadoop into PATH
 RUN echo 'export HADOOP_HOME=/usr/local/hadoop' >> /etc/profile
 
-RUN echo 'PATH=$PATH:HOME/bin:$HADOOP_HOME/bin' >> /etc/profile &&\
-echo 'export HADOOP_HOME' >> /etc/profile &&\
+RUN echo 'PATH=$PATH:HOME/bin:$HADOOP_HOME/bin' >> /etc/profile && \
+echo 'export HADOOP_HOME' >> /etc/profile && \
 echo 'export PATH' >> /etc/profile
 
 
@@ -86,8 +86,8 @@ RUN echo 'export SPARK_HOME=/usr/local/hadoop' >> /etc/profile
 # If 'hadoop' binary is on your PATH
 RUN echo 'export SPARK_DIST_CLASSPATH=$(hadoop classpath)' >> /etc/profile
 
-RUN echo 'PATH=$PATH:HOME/bin:$SPARK_HOME/bin' >> /etc/profile &&\
-echo 'export SPARK_HOME' >> /etc/profile &&\
+RUN echo 'PATH=$PATH:HOME/bin:$SPARK_HOME/bin' >> /etc/profile && \
+echo 'export SPARK_HOME' >> /etc/profile && \
 echo 'export PATH' >> /etc/profile
 
 
